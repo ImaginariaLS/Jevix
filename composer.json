@@ -1,22 +1,23 @@
 {
-  "name": "miovisman/jevix",
-  "license": "MIT",
-  "description": "Library for html filtering",
-  "authors": [
-    {"name": "ur001"},
-    {"name": "livestreet framework"},
-    {"name": "Bezumkin"},
-    {"name": "Roman Shamritskiy", "email": "roman@litgroup.ru"},
-    {"name": "Evgeniy Borisov", "email": "agel-nash@mail.ru"},
-    {"name": "Visman", "email": "mio.visman@yandex.ru", "homepage": "https://github.com/MioVisman"}
-  ],
-  "autoload": {
-    "psr-4": {
-        "MioVisman\\Jevix\\": "src/"
+    "name": "ajur-media/jevix",
+    "license": "MIT",
+    "description": "Library for html filtering, forked for imaginaria project and AJUR-Media projects from Visman",
+    "authors": [
+        {"name": "ur001"},
+        {"name": "livestreet framework"},
+        {"name": "Bezumkin"},
+        {"name": "Roman Shamritskiy", "email": "roman@litgroup.ru"},
+        {"name": "Evgeniy Borisov", "email": "agel-nash@mail.ru"},
+        {"name": "Visman", "email": "mio.visman@yandex.ru", "homepage": "https://github.com/MioVisman"},
+        {"name": "Karel Wintersky", "email": "karel.wintersky@gmail.com", "homepage": "https://github.com/KarelWintersky"}
+    ],
+    "autoload": {
+        "psr-4": {
+            "AJUR\\Jevix\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.3.0",
+        "ext-mbstring": "*"
     }
-  },
-  "require": {
-    "php": ">=7.3.0",
-    "ext-mbstring": "*"
-  }
 }

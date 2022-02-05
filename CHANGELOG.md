@@ -1,4 +1,10 @@
+2.2.2
+-------
++ Make `tagsRules` public (required for imaginaria)
++ A lot code fixes
+
 2.2.1
+-------
 + Fix text of error messages
 
 2.2.0

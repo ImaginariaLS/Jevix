@@ -5,9 +5,9 @@
  * За помощь в написании примера спасибо Александру (http://vaart.habrahabr.ru, indrid@mail.ru)
  */
 
-namespace MioVisman\Jevix;
+use AJUR\Jevix\Jevix;
 
-require('../src/Jevix.php');
+require dirname(__DIR__, 1) . '/vendor/autoload.php';
 
 $jevix = new Jevix();
 
@@ -62,10 +62,9 @@ $jevix->cfgSetAutoLinkMode(true);
 $jevix->cfgSetTagNoTypography('code');
 
 // 14. Ставим колбэк
-$jevix->cfgSetTagCallback('h6', 'MioVisman\\Jevix\\test_callback');
-function test_callback($content){
-	return mb_strtoupper($content, 'UTF-8');
-}
+$jevix->cfgSetTagCallback('h6', static function($content){
+    return mb_strtoupper($content, 'UTF-8');
+});
 
 // 15. Автозамена тегов video на iframe с youtube
 $jevix->cfgSetAutoPregReplace(
@@ -135,7 +134,7 @@ print "результат: \n-------------\n$res\n-------------\n";
 print "ошибки: \n";
 print_r($errors);
 
-// после парсинга должна получиться такая ботва:
+// тест должен выдать следующий результат
 /*-------------
 Обработка «кавычек» и «вложенных „друг в друга“ кавычек».<br/>
 Расстановка пробелов после запятых, двоеточия, знаков вопроса, и восклицания! Круто?<br/>
@@ -182,36 +181,50 @@ XSS<br/>
 </a>
 -------------
 ошибки:
+ошибки:
 Array
 (
     [0] => Array
         (
-            [message] => Недопустимое значение для атрибута тега img width=javascript:alert(1). Ожидалось число
-            [pos] => 1306
-            [ch] =>
-            [line] => 0
-            [str] =>
-<h6>Эт
+            [0] => Missing required %2$s attribute in %1$s tag
+            [1] => a
+            [2] => href
         )
 
     [1] => Array
         (
-            [message] => Недопустимое значение для атрибута тега img hspace=50%. Ожидалось число
-            [pos] => 1306
-            [ch] =>
-            [line] => 0
-            [str] =>
-<h6>Эт
+            [0] => %2$s attribute is not allowed in %1$s tag
+            [1] => a
+            [2] => rel
         )
 
     [2] => Array
         (
-            [message] => Попытка вставить JavaScript в URI
-            [pos] => 1743
-            [ch] =>
-            [line] => 0
-            [str] =>
-<img s
+            [0] => Attempting to insert JavaScript into %2$s attribute of %1$s tag
+            [1] => img
+            [2] => width
+        )
+
+    [3] => Array
+        (
+            [0] => %2$s attribute is not allowed in %1$s tag
+            [1] => img
+            [2] => onload
+        )
+
+    [4] => Array
+        (
+            [0] => Invalid value for %2$s attribute [=%3$s] of %1$s tag
+            [1] => img
+            [2] => hspace
+            [3] => 50%
+        )
+
+    [5] => Array
+        (
+            [0] => Attempting to insert JavaScript into %2$s attribute of %1$s tag
+            [1] => a
+            [2] => href
         )
 
 )

@@ -19,48 +19,49 @@
 
 declare(strict_types=1);
 
-namespace MioVisman\Jevix;
+namespace AJUR\Jevix;
 
 use InvalidArgumentException;
 use RuntimeException;
 
-class Jevix
+class Jevix implements JevixInterface
 {
-    const PRINATABLE  =     0x1;
-    const ALPHA       =     0x2;
-    const LAT         =     0x4;
-    const RUS         =     0x8;
-    const NUMERIC     =    0x10;
-    const SPACE       =    0x20;
-    const NAME        =    0x40;
-    const URL         =   0x100;
-    const NOPRINT     =   0x200;
-    const PUNCTUATUON =   0x400;
+    public const PRINTABLE  =     0x1;
+    public const ALPHA       =     0x2;
+    public const LAT         =     0x4;
+    public const RUS         =     0x8;
+    public const NUMERIC     =    0x10;
+    public const SPACE       =    0x20;
+    public const NAME        =    0x40;
+    public const URL         =   0x100;
+    public const NOPRINT     =   0x200;
+    public const PUNCTUATUON =   0x400;
     //const	          =   0x800;
     //const	          =  0x1000;
-    const HTML_QUOTE  =  0x2000;
-    const TAG_QUOTE   =  0x4000;
-    const QUOTE_CLOSE =  0x8000;
-    const NL          = 0x10000;
-    const QUOTE_OPEN  =       0;
+    public const HTML_QUOTE  =  0x2000;
+    public const TAG_QUOTE   =  0x4000;
+    public const QUOTE_CLOSE =  0x8000;
+    public const NL          = 0x10000;
+    public const QUOTE_OPEN  =       0;
 
-    const STATE_TEXT                    = 0;
-    const STATE_TAG_PARAMS              = 1;
-    const STATE_TAG_PARAM_VALUE         = 2;
-    const STATE_INSIDE_TAG              = 3;
-    const STATE_INSIDE_NOTEXT_TAG       = 4;
-    const STATE_INSIDE_PREFORMATTED_TAG = 5;
-    const STATE_INSIDE_CALLBACK_TAG     = 6;
+    public const STATE_TEXT                    = 0;
+    public const STATE_TAG_PARAMS              = 1;
+    public const STATE_TAG_PARAM_VALUE         = 2;
+    public const STATE_INSIDE_TAG              = 3;
+    public const STATE_INSIDE_NOTEXT_TAG       = 4;
+    public const STATE_INSIDE_PREFORMATTED_TAG = 5;
+    public const STATE_INSIDE_CALLBACK_TAG     = 6;
 
-    protected $tagsRules  = [];
+    public $tagsRules  = [];
 #   protected $entities1  = ['"' => '&quot;', "'" => '&#39;', '&' => '&amp;', '<' => '&lt;', '>' => '&gt;'];
-    protected $entities2  = ['<' => '&lt;', '>' => '&gt;', '"' => '&quot;'];
-    protected $textQuotes = [['«', '»'], ['„', '“']];
+    public $entities2  = ['<' => '&lt;', '>' => '&gt;', '"' => '&quot;'];
+    public $textQuotes = [['«', '»'], ['„', '“']];
 
     protected $dash                 = " — ";
 #   protected $apostrof             = "’";
     protected $dotes                = "…";
     protected $nl                   = "\n";
+    
     protected $defaultTagParamRules = [
         'href'   => '#link',
         'src'    => '#image',
@@ -102,24 +103,24 @@ class Jevix
     /**
      * Константы для класификации тегов
      */
-    const TR_TAG_ALLOWED       = 1;  // Тег позволен
-    const TR_PARAM_ALLOWED     = 2;  // Параметр тега позволен (a->title, a->src, i->alt)
-    const TR_PARAM_REQUIRED    = 3;  // Параметр тега являтся необходимым (a->href, img->src)
-    const TR_TAG_SHORT         = 4;  // Тег может быть коротким (img, br)
-    const TR_TAG_CUT           = 5;  // Тег необходимо вырезать вместе с контентом (script, iframe)
-    const TR_TAG_CHILD         = 6;  // Тег может содержать другие теги
-    const TR_TAG_CONTAINER     = 7;  // Тег может содержать лишь указанные теги. В нём не может быть текста
-    const TR_TAG_CHILD_TAGS    = 8;  // Теги которые может содержать внутри себя другой тег
-    const TR_TAG_PARENT        = 9;  // Тег в котором должен содержаться данный тег
-    const TR_TAG_PREFORMATTED  = 10; // Преформатированные тег, в котором всё заменяется на HTML сущности типа <pre> сохраняя все отступы и пробелы
-    const TR_PARAM_AUTO_ADD    = 11; // Auto add parameters + default values (a->rel[=nofollow])
-    const TR_TAG_NO_TYPOGRAPHY = 12; // Отключение типографирования для тега
-    const TR_TAG_IS_EMPTY      = 13; // Не короткий тег с пустым содержанием имеет право существовать
-    const TR_TAG_NO_AUTO_BR    = 14; // Тег в котором не нужна авто-расстановка <br>
-    const TR_TAG_CALLBACK      = 15; // Тег обрабатывается callback-функцией - в обработку уходит только контент тега (короткие теги не обрабатываются)
-    const TR_TAG_BLOCK_TYPE    = 16; // Тег после которого не нужна автоподстановка <br>
-    const TR_TAG_CALLBACK_FULL = 17; // Тег обрабатывается callback-функцией - в обработку уходит весь тег
-    const TR_PARAM_COMBINATION = 18; // Проверка на возможные комбинации значений параметров тега
+    public const TR_TAG_ALLOWED       = 1;  // Тег позволен
+    public const TR_PARAM_ALLOWED     = 2;  // Параметр тега позволен (a->title, a->src, i->alt)
+    public const TR_PARAM_REQUIRED    = 3;  // Параметр тега являтся необходимым (a->href, img->src)
+    public const TR_TAG_SHORT         = 4;  // Тег может быть коротким (img, br)
+    public const TR_TAG_CUT           = 5;  // Тег необходимо вырезать вместе с контентом (script, iframe)
+    public const TR_TAG_CHILD         = 6;  // Тег может содержать другие теги
+    public const TR_TAG_CONTAINER     = 7;  // Тег может содержать лишь указанные теги. В нём не может быть текста
+    public const TR_TAG_CHILD_TAGS    = 8;  // Теги которые может содержать внутри себя другой тег
+    public const TR_TAG_PARENT        = 9;  // Тег в котором должен содержаться данный тег
+    public const TR_TAG_PREFORMATTED  = 10; // Преформатированные тег, в котором всё заменяется на HTML сущности типа <pre> сохраняя все отступы и пробелы
+    public const TR_PARAM_AUTO_ADD    = 11; // Auto add parameters + default values (a->rel[=nofollow])
+    public const TR_TAG_NO_TYPOGRAPHY = 12; // Отключение типографирования для тега
+    public const TR_TAG_IS_EMPTY      = 13; // Не короткий тег с пустым содержанием имеет право существовать
+    public const TR_TAG_NO_AUTO_BR    = 14; // Тег в котором не нужна авто-расстановка <br>
+    public const TR_TAG_CALLBACK      = 15; // Тег обрабатывается callback-функцией - в обработку уходит только контент тега (короткие теги не обрабатываются)
+    public const TR_TAG_BLOCK_TYPE    = 16; // Тег после которого не нужна автоподстановка <br>
+    public const TR_TAG_CALLBACK_FULL = 17; // Тег обрабатывается callback-функцией - в обработку уходит весь тег
+    public const TR_PARAM_COMBINATION = 18; // Проверка на возможные комбинации значений параметров тега
 
     /**
      * Классы символов генерируются symclass.php
@@ -338,94 +339,46 @@ class Jevix
         return $this;
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Разрешение тегов
-     * Все не разрешённые теги считаются запрещёнными
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgAllowTags($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_ALLOWED, true);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Коротие теги типа <img>
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgSetTagShort($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_SHORT, true, false);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Преформатированные теги, в которых всё заменяется на HTML сущности типа <pre>
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgSetTagPreformatted($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_PREFORMATTED, true, false);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Теги в которых отключено типографирование типа <code>
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgSetTagNoTypography($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_NO_TYPOGRAPHY, true, false);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Не короткие теги которые не нужно удалять с пустым содержанием, например, <param name="code"
-     * value="die!"></param>
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgSetTagIsEmpty($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_IS_EMPTY, true, false);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Теги внутри который не нужна авто-расстановка <br>, например, <ul></ul> и <ol></ol>
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgSetTagNoAutoBr($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_NO_AUTO_BR, true, false);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Тег необходимо вырезать вместе с контентом (script, iframe)
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgSetTagCutWithContent($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_CUT, true);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: После тега не нужно добавлять дополнительный <br>
-     * @param array|string $tags тег(и)
-     * @return $this
-     */
     public function cfgSetTagBlockType($tags): self
     {
         return $this->_cfgSetTagsFlag($tags, self::TR_TAG_BLOCK_TYPE, true, false);
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Добавление разрешённых параметров тега
-     * @param string $tag тег
-     * @param string|array $params разрешённые параметры
-     * @return $this
-     */
     public function cfgAllowTagParams(string $tag, $params): self
     {
         $this->tagNameTest($tag);
@@ -450,12 +403,6 @@ class Jevix
         return $this;
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Добавление необходимых параметров тега
-     * @param string $tag тег
-     * @param string|array $params разрешённые параметры
-     * @return $this
-     */
     public function cfgSetTagParamsRequired(string $tag, $params): self
     {
         $this->tagNameTest($tag);
@@ -476,14 +423,6 @@ class Jevix
         return $this;
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Установка тегов которые может содержать тег-контейнер
-     * @param string $tag тег
-     * @param string|array $childs разрешённые теги
-     * @param bool $isContainerOnly тег является только контейнером других тегов и не может содержать текст
-     * @param bool $isChildOnly вложенные теги не могут присутствовать нигде кроме указанного тега
-     * @return $this
-     */
     public function cfgSetTagChilds(string $tag, $childs, bool $isContainerOnly = false, bool $isChildOnly = false): self
     {
         $this->tagNameTest($tag);
@@ -523,14 +462,6 @@ class Jevix
         return $this;
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Установка дефолтных значений для атрибутов тега
-     * @param string $tag тег
-     * @param string $param атрибут
-     * @param string $value значение
-     * @param bool $isRewrite заменять указанное значение дефолтным
-     * @return $this
-     */
     public function cfgSetTagParamDefault(string $tag, string $param, string $value, bool $isRewrite = false): self
     {
         $this->tagNameTest($tag);
@@ -547,12 +478,6 @@ class Jevix
         return $this;
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Устанавливаем callback-функцию на обработку содержимого тега
-     * @param string $tag тег
-     * @param mixed $callback функция
-     * @return $this
-     */
     public function cfgSetTagCallback(string $tag, $callback = null): self
     {
         $this->tagNameTest($tag);
@@ -561,12 +486,6 @@ class Jevix
         return $this;
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Устанавливаем callback-функцию на обработку тега (полностью)
-     * @param string $tag тег
-     * @param mixed $callback функция
-     * @return $this
-     */
     public function cfgSetTagCallbackFull(string $tag, $callback = null): self
     {
         $this->tagNameTest($tag);
@@ -575,16 +494,6 @@ class Jevix
         return $this;
     }
 
-    /**
-     * КОНФИГУРАЦИЯ: Устанавливаем комбинации значений параметров для тега
-     *
-     * @param string $tag тег
-     * @param string $param атрибут
-     * @param array $aCombinations Список комбинаций значений. Пример:
-     *              array('myvalue'=>array('attr1'=>array('one','two'),'attr2'=>'other'))
-     * @param bool $bRemove Удаляеть тег или нет, если в списке нет значения основного атрибута
-     * @return $this
-     */
     public function cfgSetTagParamCombination(string $tag, string $param, array $aCombinations, bool $bRemove = false): self
     {
         $this->tagNameTest($tag);
@@ -775,9 +684,9 @@ class Jevix
 
             return $this;
 
-        } else {
-            throw new InvalidArgumentException('Expected "\\r\\n", "\\r" or "\\n"');
         }
+    
+        throw new InvalidArgumentException('Expected "\\r\\n", "\\r" or "\\n"');
     }
 
     /**
@@ -800,12 +709,7 @@ class Jevix
 
         return $chars[0];
     }
-
-    /**
-     * @param $text
-     * @param $errors
-     * @return string
-     */
+    
     public function parse(string $text, &$errors): string
     {
         $this->curPos       = -1;
@@ -909,11 +813,10 @@ class Jevix
 
         return \count($this->states) - 1;
     }
-
+    
     /**
      * Восстановить
-     * @param int $index
-     * @throws RuntimeException
+     * @param int|null $index
      */
     protected function restoreState(int $index = null): void
     {
@@ -1092,7 +995,7 @@ class Jevix
      */
     protected function getCharClass(int $ord): int
     {
-        return $this->chClasses[$ord] ?? self::PRINATABLE;
+        return $this->chClasses[$ord] ?? self::PRINTABLE;
     }
 
     /**
@@ -1577,7 +1480,7 @@ class Jevix
      * @param null|string $parentTag
      * @return mixed|string
      */
-    protected function makeTag(string $tag, array $params, string $content, bool $short, $parentTag = null)
+    protected function makeTag(string $tag, array $params, string &$content, bool $short, $parentTag = null)
     {
         $this->curParentTag = $parentTag;
         $tag                = \mb_strtolower($tag, 'UTF-8');
@@ -1983,24 +1886,18 @@ class Jevix
         while ($this->curChClass) {
             $tag      = '';
             $params   = null;
-            $text     = null;
+            $text     = '';
             $shortTag = false;
             $name     = null;
 
             // Если мы находимся в режиме тега без текста
             // пропускаем контент пока не встретится <
-            if (
-                $this->state == self::STATE_INSIDE_NOTEXT_TAG
-                && $this->curCh != '<'
-            ) {
+            if ( $this->state == self::STATE_INSIDE_NOTEXT_TAG && $this->curCh != '<' ) {
                 $this->skipUntilCh('<');
             }
 
-            // <Тег> кекст </Тег>
-            if (
-                $this->curCh == '<'
-                && $this->tag($tag, $params, $text, $shortTag)
-            ) {
+            // <Тег> текст </Тег>
+            if ( $this->curCh == '<' && $this->tag($tag, $params, $text, $shortTag) ) {
                 // Преобразуем тег в текст
                 $tagText  = $this->makeTag($tag, $params, $text, $shortTag, $parentTag);
                 $content .= $tagText;
@@ -2344,7 +2241,7 @@ class Jevix
         $dash    = '';
         $newLine = true;
         $newWord = true; // Возможно начало нового слова
-        $url     = null;
+        $url     = '';
         $href    = null;
         //$punctuation = '';
 
@@ -2470,7 +2367,7 @@ class Jevix
                 // URL
                 $text .= $this->makeTag('a', ['href' => $href], $url, false);
 
-            } elseif ($this->curChClass & self::PRINATABLE) {
+            } elseif ($this->curChClass & self::PRINTABLE) {
                 // Экранируем символы HTML которые нельзя сувать внутрь тега (но не те, которые не могут быть в параметрах)
                 $text   .= $this->entities2[$this->curCh] ?? $this->curCh;
                 $this->getCh();
@@ -2543,7 +2440,6 @@ class Jevix
 
             $url  = "www.{$url}";
             $href = "http://{$url}";
-
         }
 
         if (! empty($url)) {
@@ -2553,14 +2449,11 @@ class Jevix
                 $href  = \substr($href, 0, $count);
                 $this->goToPosition($this->curPos + $count);
             }
-
             return true;
-
-        } else {
-            $this->restoreState();
-
-            return false;
         }
+    
+        $this->restoreState();
+        return false;
     }
 
     /**
@@ -2623,5 +2516,10 @@ class Jevix
                 return null;
             }
         }
+    }
+    
+    public function getRules():array
+    {
+        return $this->tagsRules;
     }
 }
