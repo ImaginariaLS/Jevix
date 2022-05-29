@@ -5,9 +5,9 @@
  * За помощь в написании примера спасибо Александру (http://vaart.habrahabr.ru, indrid@mail.ru)
  */
 
-use AJUR\Jevix\Jevix;
+use Imaginaria\Jevix\Jevix;
 
-require('../src/Jevix.php');
+require dirname(__DIR__, 1) . '/vendor/autoload.php';
 
 $jevix = new Jevix();
 $jevix->cfgSetAllowedProtocols(array('', 'http', 'https'), false, '#domain');

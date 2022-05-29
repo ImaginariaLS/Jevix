@@ -1,6 +1,6 @@
 <?php
 
-namespace AJUR\Jevix;
+namespace Imaginaria\Jevix;
 
 interface JevixInterface
 {

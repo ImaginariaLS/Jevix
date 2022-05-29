@@ -1,5 +1,5 @@
 {
-    "name": "ajur-media/jevix",
+    "name": "imaginaria/jevix",
     "license": "MIT",
     "description": "Library for html filtering, forked for imaginaria project and AJUR-Media projects from Visman",
     "authors": [
@@ -13,11 +13,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "AJUR\\Jevix\\": "src/"
+            "Imaginaria\\Jevix\\": "src/"
         }
     },
     "require": {
-        "php": ">=7.3.0",
+        "php": ">=7.4.0",
         "ext-mbstring": "*"
     }
 }

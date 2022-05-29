@@ -7,7 +7,7 @@
  * Этот файл необходим только чтобы изменить правила классификации
  */
 
-use AJUR\Jevix\Jevix;
+use Imaginaria\Jevix\Jevix;
 
 require __DIR__ . '/vendor/autoload.php';
 
